@@ -1,0 +1,78 @@
+.headline{
+    background: #ccc;
+}
+.square{
+    border: 2px solid black;
+    height: 300px;
+    width: 300px;
+    margin: 0 auto;
+}
+.blue{
+    background-color: blue;
+}
+.yellow{
+    background-color: yellow;
+}
+.green{
+    background-color: green;
+}
+.red{
+    background-color: red;
+}
+
+.div-show{
+    width: 100px;
+    height: 100px;
+    background: purple;
+    color: white;
+    margin: 20px auto;
+}
+
+.squaree{
+    width: 75px;
+    height: 75px;
+    border: 10px solid orange;
+}
+
+.circle{
+    width: 75px;
+    height: 75px;
+    border: 10px solid purple;
+    border-radius: 50%;
+}
+
+.input-border{
+    border: 5px solid red;
+}
+
+.board{
+    width: 80vw;
+    height: 80vh;
+    outline: 5px solid black;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+%square{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.square-white{
+    @extend %square;
+    background: white;
+}
+
+.square-black{
+    @extend %square;
+    background: black;
+}
+
+.piece{
+    background: blue;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+}
