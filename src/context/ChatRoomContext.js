@@ -1,8 +1,9 @@
-import React, { createContext, useEffect, useReducer } from 'react';
+import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { useHistory } from 'react-router-dom';
 import { addMessageAction, showChatroomData } from '../actions/chatroomActions';
 import chatroomReducer, { initialchatroomState } from '../reducers/chatroomReducer';
 import { getData } from '../server/db';
+import { LoginContext } from './LoginContext';
 
 export const ChatroomContext = createContext();
 
@@ -10,12 +11,12 @@ const ChatroomContextProvider = (props) => {
 
     const [chatroomState, chatroomDispatch] = useReducer(chatroomReducer, initialchatroomState)
         // let roomname = props.children.props.roomName;
-
+    const {userData} = useContext(LoginContext);
     const history = useHistory();
 
     useEffect(()=>{
         console.log("CONTEXT")
-        let res = getData(props.roomID).then(
+        let res = getData(props.roomID, userData.token).then(
             (roomData)=>{
                 const roomName = roomData.name;
                 const users = roomData.users || [];
@@ -27,7 +28,7 @@ const ChatroomContextProvider = (props) => {
                 }
             }
         );
-    },[props.roomID, history])
+    },[props.roomID, history, userData.token])
 
 
     return (

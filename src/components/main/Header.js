@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { logoutAction } from '../../actions/loginActions';
 import { LoginContext } from '../../context/LoginContext';
+import { deleteUserFromCookie } from '../../cookies/cookie';
 
 const Header = () => {
 
@@ -12,6 +13,7 @@ const Header = () => {
 
     const onClickLogout = () => {
         dispatchUserData(logoutAction())
+        deleteUserFromCookie()
         history.push("/home")
     }
     console.log(userData)

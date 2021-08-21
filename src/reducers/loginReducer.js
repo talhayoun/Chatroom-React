@@ -1,14 +1,15 @@
 export const userDataInitialLoginState = {
-    user: null
+    user: null,
+    token: ""
 };
 
 
 const loginReducer = (userData, action) => {
     switch (action.type) {
         case "LOGIN":
-            return { user: { ...action.user } }
+            return { user: { ...action.user }, token: action.token }
         case "LOGOUT":
-            return { user: null }
+            return { user: null, token: "" }
         default:
             return { ...userData }
     }

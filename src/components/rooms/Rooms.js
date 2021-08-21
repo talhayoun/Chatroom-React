@@ -1,7 +1,8 @@
 import { nanoid } from 'nanoid';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { addRoomAction, setRooms } from '../../actions/roomsActions';
+import { LoginContext } from '../../context/LoginContext';
 import roomsReducer from '../../reducers/roomsReducer';
 import { getRoomsFromDB, postRoomInDB } from '../../server/db';
 import Loader from '../main/Loader';
@@ -26,6 +27,8 @@ const Rooms = (props) => {
 
     const history = useHistory()
 
+    const {userData} = useContext(LoginContext);
+
     // useEffect(()=>{
     //     (async ()=>{
     //         try{
@@ -41,12 +44,21 @@ const Rooms = (props) => {
 
 
     useEffect(() => {
-        getRoomsFromDB().then((room)=>{
+        let isComponentExist = true;
+        getRoomsFromDB(userData.token).then((room)=>{
             console.log(room, 'room')
-            dispatchRooms(setRooms(room))
-            setIsRoomLoaded(true);
+            if(isComponentExist){
+                dispatchRooms(setRooms(room))
+                setIsRoomLoaded(true);
+            }
         })
-    },[])
+
+        return () => {
+            isComponentExist = false;
+        }
+
+        
+    },[userData.token])
 
     const onSubmitButton = (event) => {
         event.preventDefault();
@@ -62,7 +74,7 @@ const Rooms = (props) => {
             //     name: roomName,
             //     id: nanoid()
             // }))
-            postRoomInDB(roomName).then((roomID) =>{
+            postRoomInDB(roomName, userData.token).then((roomID) =>{
                 history.push("/chatroom/"+ roomID)
             })
         }

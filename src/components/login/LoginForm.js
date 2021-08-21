@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { loginAction } from '../../actions/loginActions';
 import { LoginContext } from '../../context/LoginContext';
+import { saveUserOnCookie } from '../../cookies/cookie';
+import { loginToSite } from '../../server/auth';
 
 
 const LoginForm = (props) => {
@@ -47,8 +49,21 @@ const LoginForm = (props) => {
 
     const onSubmitForm = (e) => {
         e.preventDefault()
-        dispatchUserData(loginAction())
-        history.push("/rooms");
+        loginToSite(email, password).then(
+            (userData) => {
+                console.log("userdata", userData)
+                dispatchUserData(loginAction(userData))
+                saveUserOnCookie(userData);
+                history.push("/rooms")
+            },
+            (err)=>{
+                if(err.message === "Email or password are invalid"){
+                    setErrorMessage(err.message);
+                }
+            }
+        )
+        // dispatchUserData(loginAction())
+        // history.push("/rooms");
     }
 
     const onClickSubscribe = () => {

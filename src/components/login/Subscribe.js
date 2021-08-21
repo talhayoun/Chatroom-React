@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import validator from 'validator';
 import { loginAction } from '../../actions/loginActions';
 import { LoginContext } from '../../context/LoginContext';
+import { saveUserOnCookie } from '../../cookies/cookie';
+import { subscribeToSite } from '../../server/auth';
 
 const Subscribe = (props) => {
 
@@ -105,8 +107,24 @@ const Subscribe = (props) => {
 
     const onSubmitForm = (e) => {
         e.preventDefault();
-        dispatchUserData(loginAction());
-        history.push("/rooms")
+        subscribeToSite(email, password).then(
+            (userData)=>{
+                dispatchUserData(loginAction(userData));
+                saveUserOnCookie(userData);
+                history.push("/rooms");
+            },
+            (err)=>{
+                console.log(err, "bla")
+                if(err.message === "EMAIL_EXISTS"){
+                    setInputClasses(["", "", "input-invalid", "", ""]);
+                    setInvalidMessages(["", "", "Mail exists", "", ""])
+                    setValidInputs([true, true, false, true, true]);
+                    
+                }
+            }
+        )
+        // dispatchUserData(loginAction());
+        // history.push("/rooms")
     }
 
     return (
